@@ -72,6 +72,33 @@ namespace Frames
         }
 
 
+        [Test]
+        public void GoToBottom()
+        {
+            Driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/nested_frames");
+            Driver.Manage().Window.Maximize();
+            Driver.SwitchTo().ParentFrame();
+            var BottomFrame = Driver.FindElement(By.CssSelector("[name='frame-bottom']"));
+            Driver.SwitchTo().Frame(BottomFrame);
+            var BodyText = Driver.FindElement(By.XPath("//body")).Text;
+            Assert.True(BodyText.Equals("BOTTOM"));
+        }
+
+
+        [Test]
+        public void GoToLeftFrame()
+        {
+            Driver.Navigate().GoToUrl("https://the-internet.herokuapp.com/nested_frames");
+            Driver.Manage().Window.Maximize();
+            Driver.SwitchTo().ParentFrame();
+            var FrameTop = Driver.FindElement(By.CssSelector("[name='frame-top']"));
+            Driver.SwitchTo().Frame(FrameTop);
+            var RightFrame = Driver.FindElement(By.CssSelector("[name='frame-left']"));
+            Driver.SwitchTo().Frame(RightFrame);
+            var ContainedText = Driver.FindElement(By.XPath("//body")).Text;
+            Assert.IsTrue(ContainedText.Equals("LEFT"));
+        }
+
         [TearDown]
         public void TearDown() { 
             Driver.Dispose();
